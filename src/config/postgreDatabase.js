@@ -6,7 +6,7 @@ export const pool = new Pool({
   ssl: {
     rejectUnauthorized: false,
   },
-  connectionTimeoutMillis: 20000, // Dale 20 segundos para despertar
+  connectionTimeoutMillis: 20000,
 });
 
 export const pgConnection = async () => {

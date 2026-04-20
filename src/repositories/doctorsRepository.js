@@ -110,7 +110,6 @@ export const createDoctor = async ({
   try {
     await client.query("BEGIN");
 
-    // 🔥 1. crear usuario reutilizando función global
     const user = await createUser(client, {
       name,
       email,
@@ -118,7 +117,6 @@ export const createDoctor = async ({
       role: "doctor",
     });
 
-    // 🔥 2. crear doctor
     const doctorResult = await client.query(
       `INSERT INTO doctors (user_id, specialty)
        VALUES ($1, $2)

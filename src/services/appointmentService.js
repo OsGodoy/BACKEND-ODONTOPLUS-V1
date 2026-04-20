@@ -17,14 +17,12 @@ import { AppError } from "../utils/AppError.js";
 export const createAppointmentService = async (data) => {
   const { doctor_id, patient_id, date, start_time, end_time } = data;
 
-  // 🔥 0. validar paciente existe
   const patient = await getPatientById(patient_id);
 
   if (!patient) {
     throw new AppError("El paciente no existe", 400);
   }
 
-  // 🔥 1. validar disponibilidad (lo que ya tienes)
   const availability = await getAvailabilityByDoctor(doctor_id);
 
   const [year, month, day] = date.split("-").map(Number);
@@ -38,7 +36,6 @@ export const createAppointmentService = async (data) => {
     throw new AppError("El doctor no atiende ese día", 400);
   }
 
-  // 🔥 2. validar horario dentro del rango
   const isInside = availableThatDay.some((slot) => {
     return start_time >= slot.start_time && end_time <= slot.end_time;
   });
@@ -47,7 +44,6 @@ export const createAppointmentService = async (data) => {
     throw new AppError("Horario fuera de disponibilidad", 400);
   }
 
-  // 🔥 3. evitar solapamientos (ya lo tienes)
   const existingAppointments = await getAppointmentsByDoctorAndDate(
     doctor_id,
     date,

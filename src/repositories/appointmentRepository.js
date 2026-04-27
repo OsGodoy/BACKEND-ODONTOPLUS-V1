@@ -90,14 +90,13 @@ export const updateAppointment = async (id, data) => {
   return rows[0];
 };
 
-export const getAppointments = async ({ search }) => {
+export const getAppointments = async ({ search, status, sort }) => {
   const values = [];
   const filters = ["ap.deleted_at IS NULL"];
 
   if (search && search.trim() !== "") {
     const searchTerm = `%${search.trim()}%`;
     const placeholder = `$${values.length + 1}`;
-
     filters.push(
       `(immutable_unaccent(du.name) ILIKE immutable_unaccent(${placeholder}) 
         OR immutable_unaccent(p.name) ILIKE immutable_unaccent(${placeholder}))`,
@@ -105,9 +104,18 @@ export const getAppointments = async ({ search }) => {
     values.push(searchTerm);
   }
 
+  if (status === "cancelled") {
+    const placeholder = `$${values.length + 1}`;
+    filters.push(`ap.status = ${placeholder}`);
+    values.push("cancelled");
+  } else {
+    filters.push(`ap.status IN ('pending', 'confirmed')`);
+  }
+
   const whereClause =
     filters.length > 0 ? ` WHERE ${filters.join(" AND ")}` : "";
-  const orderBy = ` ORDER BY ap.date ASC, ap.start_time ASC`;
+  const direction = sort === "oldest" ? "ASC" : "DESC";
+  const orderBy = ` ORDER BY ap.date ${direction}, ap.start_time ${direction}`;
 
   const query = `${baseAppointmentQuery}${whereClause}${orderBy}`;
 

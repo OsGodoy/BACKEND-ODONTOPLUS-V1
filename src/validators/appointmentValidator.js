@@ -17,6 +17,16 @@ z.coerce.number().min(1).optional();
 
 const limitSchema = z.coerce.number().min(1).max(100).optional();
 
+export const getAppointmentsSchema = z.object({
+  query: z.object({
+    search: z.string().optional(),
+    status: z.enum(["pending", "confirmed", "cancelled"]).optional(),
+    sort: z.enum(["recent", "oldest"]).default("recent").optional(),
+    page: z.coerce.number().min(1).optional(),
+    limit: z.coerce.number().min(1).max(100).optional(),
+  }),
+});
+
 export const createAppointmentSchema = z.object({
   body: z
     .object({

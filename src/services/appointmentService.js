@@ -93,8 +93,8 @@ export const updateAppointmentService = async (id, data) => {
   return await updateAppointment(id, data);
 };
 
-export const getAppointmentsService = async ({ search }) => {
-  return await getAppointments({ search });
+export const getAppointmentsService = async ({ search, status, sort }) => {
+  return await getAppointments({ search, status, sort });
 };
 
 export const getAppointmentByIdService = async (id) => {

@@ -16,13 +16,14 @@ import {
   getAppointmentsByDoctorSchema,
   getAppointmentsByPatientSchema,
   getAppointmentSchema,
+  getAppointmentsSchema,
   updateAppointmentSchema,
 } from "../validators/appointmentValidator.js";
 import { authenticate, authorize } from "../middlewares/authMiddleware.js";
 import { ROLES } from "../constants/roles.js";
 const router = Router();
 
-router.get("/", getAppointmentsController);
+router.get("/", validateRequest(getAppointmentsSchema), getAppointmentsController);
 
 router.post(
   "/",

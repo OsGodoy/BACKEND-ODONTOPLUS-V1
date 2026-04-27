@@ -45,9 +45,9 @@ export const updateAppointmentController = async (req, res, next) => {
 
 export const getAppointmentsController = async (req, res, next) => {
   try {
-    const { search } = req.query;
+    const { search, status, sort } = req.validated.query;
 
-    const data = await getAppointmentsService({ search });
+    const data = await getAppointmentsService({ search, status, sort });
 
     res.status(200).json({
       message: "Citas obtenidas",
